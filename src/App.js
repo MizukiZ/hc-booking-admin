@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, Component } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Sidebar from "react-sidebar";
+import Header from "./components/Header";
+// import SidebarContent from "./sidebar_content";
+
+const styles = {
+  contentHeaderMenuLink: {
+    textDecoration: "none",
+    color: "white",
+    padding: 8
+  },
+  content: {
+    padding: "16px"
+  }
+};
+
+class App extends Component {
+
+
+  render() {
+    return (
+      <Sidebar
+        sidebar={(
+          <Fragment>
+            <Header title="Menu"></Header>
+            <a href="#">Schedule</a><br />
+            <a href="#">Patients</a><br />
+            <a href="#">Settings</a>
+          </Fragment>
+        )
+        }
+        docked={true}
+        sidebarClassName="hc-sidebar"
+      >
+        < Header title="Heart Councelling Admin Dashboard" >
+        </Header >
+      </Sidebar>
+    );
+  }
 }
+
 
 export default App;
