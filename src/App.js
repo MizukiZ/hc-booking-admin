@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from "react";
 
 import Sidebar from "react-sidebar";
+import SidebarContent from "./components/SidebarContent";
 import Header from "./components/Header";
 // import SidebarContent from "./sidebar_content";
 
@@ -24,9 +25,7 @@ class App extends Component {
         sidebar={(
           <Fragment>
             <Header title="Menu"></Header>
-            <a href="#">Schedule</a><br />
-            <a href="#">Patients</a><br />
-            <a href="#">Settings</a>
+            <SidebarContent />
           </Fragment>
         )
         }
