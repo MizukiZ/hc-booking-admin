@@ -1,8 +1,10 @@
 import React, { Fragment, Component } from "react";
-
+import { connect } from 'react-redux';
 import Sidebar from "react-sidebar";
 import SidebarContent from "./components/SidebarContent";
 import Header from "./components/Header";
+import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi } from './store/actions/index'
+
 // import SidebarContent from "./sidebar_content";
 
 const styles = {
@@ -18,6 +20,11 @@ const styles = {
 
 class App extends Component {
 
+  componentDidMount() {
+    this.props.fetchAppointments()
+    this.props.fetchSettings()
+    this.props.fetchClients()
+  }
 
   render() {
     return (
@@ -40,4 +47,21 @@ class App extends Component {
 }
 
 
-export default App;
+const mapStateToProps = function (state) {
+  return {
+    appointments: state.appointments,
+    settings: state.appointments,
+    clients: state.appointments
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchAppointments: () => dispatch(fetchAppointmentsDataFromApi()),
+    fetchSettings: () => dispatch(fetchSettingsDataFromApi()),
+    fetchClients: () => dispatch(fetchClientsDataFromApi())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+

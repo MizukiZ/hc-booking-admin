@@ -21,7 +21,7 @@ const SidebarContent = () => {
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
-        <ListItemText primary="Patients" />
+        <ListItemText primary="Clients" />
       </ListItem>
       <ListItem button>
         <ListItemIcon>
