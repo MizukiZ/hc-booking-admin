@@ -16,6 +16,11 @@ const styles = {
   },
   content: {
     padding: "16px"
+  },
+  header: {
+    backgroundColor: "#03a9f4",
+    color: "white",
+    height: '60px'
   }
 };
 
@@ -32,14 +37,15 @@ class App extends Component {
       <Sidebar
         sidebar={(
           <Fragment>
-            <Header title="Menu"></Header>
+            <div style={styles.header}>
+            </div>
             <SidebarContent />
           </Fragment>
         )
         }
         docked={true}
         sidebarClassName="hc-sidebar"
-        transitions={false}
+        transitions={true}
       >
         < Header title="Heart Councelling Admin Dashboard" >
         </Header >

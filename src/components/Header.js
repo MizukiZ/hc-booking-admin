@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import '../styles/lock.css'
+import Grid from '@material-ui/core/Grid';
 
 const styles = {
   root: {
@@ -15,12 +17,21 @@ const styles = {
 };
 
 const Header = props => {
+  const [verified, setVerified] = useState(false)
+
   return (
-    <div>
-      <div style={styles.header}>{props.title}</div>
-      {props.children}
-    </div>
+    <Grid container alignItems='center' justify="center" style={styles.header}>
+      <Grid item xs={11}>{props.title}</Grid>
+      <Grid
+        onClick={() => {
+          setVerified(!verified)
+        }}
+        className={`lock ${verified ? 'unlocked' : ''}`
+        }></Grid>
+    </Grid>
   );
 };
+
+
 
 export default Header;
