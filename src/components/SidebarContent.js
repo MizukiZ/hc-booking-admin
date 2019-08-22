@@ -8,22 +8,39 @@ import CalendarIcon from '@material-ui/icons/CalendarToday';
 import PeopleIcon from '@material-ui/icons/People';
 import SettingsIcon from '@material-ui/icons/Settings';
 
-const SidebarContent = () => {
+import { withRouter } from "react-router-dom"
+
+const SidebarContent = (props) => {
   return (
     <List component="nav" aria-label="main mailbox folders">
-      <ListItem button>
+      <ListItem
+        button
+        onClick={() => {
+          props.history.push('/')
+        }}
+      >
         <ListItemIcon>
           <CalendarIcon />
         </ListItemIcon>
         <ListItemText primary="Schedule" />
       </ListItem>
-      <ListItem button>
+      <ListItem
+        button
+        onClick={() => {
+          props.history.push('/clients')
+        }}
+      >
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
         <ListItemText primary="Clients" />
       </ListItem>
-      <ListItem button>
+      <ListItem
+        button
+        onClick={() => {
+          props.history.push('/settings')
+        }}
+      >
         <ListItemIcon>
           <SettingsIcon />
         </ListItemIcon>
@@ -33,4 +50,4 @@ const SidebarContent = () => {
   );
 };
 
-export default SidebarContent
+export default withRouter(SidebarContent)

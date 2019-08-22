@@ -4,6 +4,7 @@ import Sidebar from "react-sidebar";
 import SidebarContent from "./components/SidebarContent";
 import Header from "./components/Header";
 import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi } from './store/actions/index'
+import { Route, withRouter } from "react-router-dom"
 
 // import SidebarContent from "./sidebar_content";
 
@@ -38,9 +39,26 @@ class App extends Component {
         }
         docked={true}
         sidebarClassName="hc-sidebar"
+        transitions={false}
       >
         < Header title="Heart Councelling Admin Dashboard" >
         </Header >
+
+        {/* schedule page path */}
+        <Route path='/' exact component={() => {
+          return <h1>Schedule content here</h1>
+        }} />
+
+        {/* clients page path */}
+        <Route path='/clients/' component={() => {
+          return <h1>clients content here</h1>
+        }} />
+
+        {/* settings page path */}
+        <Route path='/settings/' component={() => {
+          return <h1>settings content here</h1>
+        }} />
+
       </Sidebar>
     );
   }
