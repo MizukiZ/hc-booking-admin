@@ -4,20 +4,11 @@ import Sidebar from "react-sidebar";
 import SidebarContent from "./components/SidebarContent";
 import Header from "./components/Header";
 import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi } from './store/actions/index'
-import { Route, withRouter } from "react-router-dom"
+import { Route } from "react-router-dom"
+
+import ScheduleContent from "./components/ScheduleContent"
 
 // import SidebarContent from "./sidebar_content";
-
-const styles = {
-  contentHeaderMenuLink: {
-    textDecoration: "none",
-    color: "white",
-    padding: 8
-  },
-  content: {
-    padding: "16px"
-  }
-};
 
 class App extends Component {
 
@@ -46,7 +37,7 @@ class App extends Component {
 
         {/* schedule page path */}
         <Route path='/' exact component={() => {
-          return <h1>Schedule content here</h1>
+          return <ScheduleContent />
         }} />
 
         {/* clients page path */}
