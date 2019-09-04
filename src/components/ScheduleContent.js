@@ -15,13 +15,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 const ScheduleContent = props => {
+  const { appointments, clients, options, settings } = props
   const [currentDate, currentDateChange] = useState(new Date())
   const [selectedData, setSelectedData] = useState(null)
   const [open, setOpen] = React.useState(false);
-  const upcomingApp = props.appointments ? nextAppointment(props.appointments) : []
-  const upcomingClient = upcomingApp && props.clients ? findClientById(upcomingApp.client_id, props.clients.slice(0)) : null
+  const upcomingApp = appointments ? nextAppointment(appointments) : []
+  const upcomingClient = upcomingApp && clients ? findClientById(upcomingApp.client_id, clients.slice(0)) : null
 
-  let scheduleData = props.appointments ? generateSchedule(props.appointments) : []
+  let scheduleData = appointments ? generateSchedule(appointments) : []
 
   const Appointment = ({
     children, style, ...restProps
@@ -49,7 +50,7 @@ const ScheduleContent = props => {
   }
 
   return (
-    <Grid container justify="center">
+    appointments && clients && options && <Grid container justify="center">
       <Dialog
         open={open}
         onClose={handleClose}
@@ -60,11 +61,13 @@ const ScheduleContent = props => {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {/*  dialog content here */}
-            Option: {selectedData && findOptionById(selectedData.option_id, props.options.slice(0)).title}
+            Option: {selectedData && findOptionById(selectedData.option_id, options.slice(0)).title}
             <br />
-            Client: {selectedData && findOptionById(selectedData.client_id, props.clients.slice(0)).email}
+            Client: {selectedData && findClientById(selectedData.client_id, clients.slice(0)).email}
             <br />
-            DateTime: {selectedData && selectedData.startDate}
+            Start Time: {selectedData && selectedData.startDate}
+            <br />
+            End Time: {selectedData && selectedData.endDate}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -81,7 +84,7 @@ const ScheduleContent = props => {
         </h3>
       </Grid>
       <Grid item xs={12}>
-        {props.settings &&
+        {settings &&
           <Scheduler
             data={scheduleData}
             height={700}
@@ -93,9 +96,9 @@ const ScheduleContent = props => {
               }}
             />
             <WeekView
-              startDayHour={Number(props.settings.start_time.split(":")[0])}
+              startDayHour={Number(settings.start_time.split(":")[0])}
               // set end time from admin setting
-              endDayHour={Number(props.settings.end_time.split(":")[0])}
+              endDayHour={Number(settings.end_time.split(":")[0])}
             />
             <Toolbar />
             <DateNavigator />
