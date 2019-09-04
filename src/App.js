@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Sidebar from "react-sidebar";
 import SidebarContent from "./components/SidebarContent";
 import Header from "./components/Header";
-import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi } from './store/actions/index'
+import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi, fetchOptionsDataFromApi } from './store/actions/index'
 import { Route } from "react-router-dom"
 
 import ScheduleContent from "./components/ScheduleContent"
@@ -16,6 +16,7 @@ class App extends Component {
     this.props.fetchAppointments()
     this.props.fetchSettings()
     this.props.fetchClients()
+    this.props.fetchOptions()
   }
 
   render() {
@@ -68,7 +69,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchAppointments: () => dispatch(fetchAppointmentsDataFromApi()),
     fetchSettings: () => dispatch(fetchSettingsDataFromApi()),
-    fetchClients: () => dispatch(fetchClientsDataFromApi())
+    fetchClients: () => dispatch(fetchClientsDataFromApi()),
+    fetchOptions: () => dispatch(fetchOptionsDataFromApi())
   }
 }
 
