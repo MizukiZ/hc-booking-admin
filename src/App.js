@@ -7,6 +7,7 @@ import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDat
 import { Route } from "react-router-dom"
 
 import ScheduleContent from "./components/ScheduleContent"
+import ClientContent from "./components/ClientContent"
 
 // import SidebarContent from "./sidebar_content";
 
@@ -43,7 +44,7 @@ class App extends Component {
 
         {/* clients page path */}
         <Route path='/clients/' component={() => {
-          return <h1>clients content here</h1>
+          return <ClientContent />
         }} />
 
         {/* settings page path */}
