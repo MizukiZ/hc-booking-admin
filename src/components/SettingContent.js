@@ -11,6 +11,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { updateSettingsDataFromApi } from '../store/actions/index'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -76,28 +79,38 @@ const SettingContent = props => {
   }
 
   const submitBtn = () => {
-    let stateDup = Object.assign({}, state)
-    const daysArray = Object.keys(stateDup).filter(function (key) {
-      if (stateDup[key] === true) {
-        return key
-      }
-    })
 
-    const submitObject = JSON.stringify({
-      setting: {
-        start_time: state.startTime,
-        end_time: state.endTime,
-        duration: state.duration,
-        interval: state.interval,
-        days_availability: JSON.stringify(weekdaysConversionReverse(daysArray))
-      }
-    })
-    props.updateSettings(submitObject)
+    if (state.startTime === "" || state.endTime === "" || state.duration === '' || state.interval === '') {
+      // empty validation
+      toast.error(<i style={{ fontWeight: 'bold' }}>Please Do Not Leave Any Fields Empty</i>)
+    } else {
+      let stateDup = Object.assign({}, state)
+      const daysArray = Object.keys(stateDup).filter(function (key) {
+        if (stateDup[key] === true) {
+          return key
+        }
+      })
+
+      const submitObject = JSON.stringify({
+        setting: {
+          start_time: state.startTime,
+          end_time: state.endTime,
+          duration: state.duration,
+          interval: state.interval,
+          days_availability: JSON.stringify(weekdaysConversionReverse(daysArray))
+        }
+      })
+      props.updateSettings(submitObject).then(() => {
+        toast.success(<i style={{ fontWeight: 'bold' }}>Setting has been updated!!</i>)
+      })
+    }
+
   }
 
   const { monday, tuesday, wednesday, thursday, friday, saturday, sunday } = state;
   return (
     <Grid container justify='center'>
+      <ToastContainer />
       <Grid item xs={4}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">Days to exclude</FormLabel>
@@ -236,7 +249,9 @@ const mapStateToProps = function (state) {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    updateSettings: (data) => dispatch(updateSettingsDataFromApi(data))
+    updateSettings: (data) => {
+      return dispatch(updateSettingsDataFromApi(data))
+    }
   }
 }
 

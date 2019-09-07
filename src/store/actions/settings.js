@@ -42,7 +42,6 @@ export const updateSettingsDataFromApi = (data) => {
   const productionApi = 'https://hc-booking-api.herokuapp.com/api/v1/settings/2'
 
   const hcApi = process.env.NODE_ENV === "development" ? localhostApi : productionApi
-  console.log(data)
   return (dispatch) => {
     axios({
       method: 'put',
@@ -55,5 +54,6 @@ export const updateSettingsDataFromApi = (data) => {
       .catch(error => {
         throw error
       })
+    return Promise.resolve()
   }
 }
