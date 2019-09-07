@@ -8,6 +8,7 @@ import { Route } from "react-router-dom"
 
 import ScheduleContent from "./components/ScheduleContent"
 import ClientContent from "./components/ClientContent"
+import SettingContent from "./components/SettingContent"
 
 // import SidebarContent from "./sidebar_content";
 
@@ -49,7 +50,7 @@ class App extends Component {
 
         {/* settings page path */}
         <Route path='/settings/' component={() => {
-          return <h1>settings content here</h1>
+          return <SettingContent />
         }} />
 
       </Sidebar>
