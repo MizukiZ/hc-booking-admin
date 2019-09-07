@@ -8,6 +8,8 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { updateSettingsDataFromApi } from '../store/actions/index'
 
 
 const useStyles = makeStyles(theme => ({
@@ -73,10 +75,30 @@ const SettingContent = props => {
     setState({ ...state, interval: v })
   }
 
+  const submitBtn = () => {
+    let stateDup = Object.assign({}, state)
+    const daysArray = Object.keys(stateDup).filter(function (key) {
+      if (stateDup[key] === true) {
+        return key
+      }
+    })
+
+    const submitObject = JSON.stringify({
+      setting: {
+        start_time: state.startTime,
+        end_time: state.endTime,
+        duration: state.duration,
+        interval: state.interval,
+        days_availability: JSON.stringify(weekdaysConversionReverse(daysArray))
+      }
+    })
+    props.updateSettings(submitObject)
+  }
+
   const { monday, tuesday, wednesday, thursday, friday, saturday, sunday } = state;
   return (
-    <Grid container>
-      <Grid item xs={6}>
+    <Grid container justify='center'>
+      <Grid item xs={4}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">Days to exclude</FormLabel>
           <FormGroup>
@@ -122,7 +144,7 @@ const SettingContent = props => {
         </FormControl>
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <Grid item xs={12}>
           <TextField
             id="startTime"
@@ -179,6 +201,18 @@ const SettingContent = props => {
           />
         </Grid>
       </Grid>
+
+      <Grid item xs={8} style={{ marginTop: 40 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            submitBtn()
+          }}
+        >
+          Update Booking Calendar
+      </Button>
+      </Grid>
     </Grid >
   );
 };
@@ -189,10 +223,21 @@ function weekdaysConvertion(excludedDaysArray) {
   return excludedDaysArray.map((daysIndex) => daysArr[daysIndex])
 }
 
+function weekdaysConversionReverse(excludedDaysArray) {
+  const daysArr = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+
+  return excludedDaysArray.map((day) => daysArr.indexOf(day))
+}
+
 const mapStateToProps = function (state) {
   return {
     settings: state.settings
   }
 }
+const mapDispatchToProps = dispatch => {
+  return {
+    updateSettings: (data) => dispatch(updateSettingsDataFromApi(data))
+  }
+}
 
-export default connect(mapStateToProps)(SettingContent);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingContent);
