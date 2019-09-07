@@ -11,6 +11,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { withRouter } from "react-router-dom"
 
 const SidebarContent = (props) => {
+  const activePath = props.history.location.pathname
+
   return (
     <List component="nav" aria-label="main mailbox folders">
       <ListItem
@@ -18,6 +20,7 @@ const SidebarContent = (props) => {
         onClick={() => {
           props.history.push('/')
         }}
+        selected={activePath === '/' ? true : false}
       >
         <ListItemIcon>
           <CalendarIcon />
@@ -29,6 +32,7 @@ const SidebarContent = (props) => {
         onClick={() => {
           props.history.push('/clients')
         }}
+        selected={activePath === '/clients' ? true : false}
       >
         <ListItemIcon>
           <PeopleIcon />
@@ -40,6 +44,7 @@ const SidebarContent = (props) => {
         onClick={() => {
           props.history.push('/settings')
         }}
+        selected={activePath === '/settings' ? true : false}
       >
         <ListItemIcon>
           <SettingsIcon />
