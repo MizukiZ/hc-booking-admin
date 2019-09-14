@@ -109,7 +109,7 @@ const SettingContent = props => {
 
   const { monday, tuesday, wednesday, thursday, friday, saturday, sunday } = state;
   return (
-    <Grid container justify='center'>
+    <Grid container justify='center' style={{ padding: 20 }}>
       <ToastContainer />
       <Grid item xs={4}>
         <FormControl component="fieldset" className={classes.formControl}>
@@ -158,7 +158,8 @@ const SettingContent = props => {
       </Grid>
 
       <Grid item xs={4}>
-        <Grid item xs={12}>
+
+        <Grid item xs={12} style={{ marginTop: 10 }}>
           <TextField
             id="startTime"
             label="Start Time"
