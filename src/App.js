@@ -5,12 +5,14 @@ import SidebarContent from "./components/SidebarContent";
 import Header from "./components/Header";
 import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi, fetchOptionsDataFromApi, getAdminProfileFetch } from './store/actions/index'
 import { Route } from "react-router-dom"
+import Grid from '@material-ui/core/Grid';
 
 import ScheduleContent from "./components/ScheduleContent"
 import ClientContent from "./components/ClientContent"
 import SettingContent from "./components/SettingContent"
 
 import { setTokenToRequestHeader } from './axiosConfig'
+import './styles/textShadow.css'
 
 const styles = {
   contentHeaderMenuLink: {
@@ -67,21 +69,33 @@ class App extends Component {
       >
         < Header title="Heart Councelling Admin Dashboard" >
         </Header >
+        {this.props.auth.currentUser ?
+          <Fragment>
+            < Route path='/' exact component={() => {
+              return <ScheduleContent />
+            }} />
+            <Route path='/clients/' component={() => {
+              return <ClientContent />
+            }} />
+            <Route path='/settings/' component={() => {
+              return <SettingContent />
+            }} />
+          </Fragment>
+          :
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justify="center"
+            style={{ minHeight: '80vh' }}
+          >
+            <Grid item xs={10}>
+              <h1 className='non-auth-message'>Please Unlock With Your Email And Password</h1>
+            </Grid>
 
-        {/* schedule page path */}
-        <Route path='/' exact component={() => {
-          return <ScheduleContent />
-        }} />
+          </Grid>}
 
-        {/* clients page path */}
-        <Route path='/clients/' component={() => {
-          return <ClientContent />
-        }} />
-
-        {/* settings page path */}
-        <Route path='/settings/' component={() => {
-          return <SettingContent />
-        }} />
 
       </Sidebar>
     );
