@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { Fragment } from "react";
+import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -15,44 +15,53 @@ const SidebarContent = (props) => {
 
   return (
     <List component="nav" aria-label="main mailbox folders">
-      <ListItem
-        button
-        onClick={() => {
-          props.history.push('/')
-        }}
-        selected={activePath === '/' ? true : false}
-      >
-        <ListItemIcon>
-          <CalendarIcon />
-        </ListItemIcon>
-        <ListItemText primary="Schedule" />
-      </ListItem>
-      <ListItem
-        button
-        onClick={() => {
-          props.history.push('/clients')
-        }}
-        selected={activePath === '/clients' ? true : false}
-      >
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Clients" />
-      </ListItem>
-      <ListItem
-        button
-        onClick={() => {
-          props.history.push('/settings')
-        }}
-        selected={activePath === '/settings' ? true : false}
-      >
-        <ListItemIcon>
-          <SettingsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Settings" />
-      </ListItem>
+      {props.auth.currentUser &&
+        <Fragment>
+          <ListItem
+            button
+            onClick={() => {
+              props.history.push('/')
+            }}
+            selected={activePath === '/' ? true : false}
+          >
+            <ListItemIcon>
+              <CalendarIcon />
+            </ListItemIcon>
+            <ListItemText primary="Schedule" />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => {
+              props.history.push('/clients')
+            }}
+            selected={activePath === '/clients' ? true : false}
+          >
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Clients" />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => {
+              props.history.push('/settings')
+            }}
+            selected={activePath === '/settings' ? true : false}
+          >
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </ListItem>
+        </Fragment>}
     </List>
   );
 };
 
-export default withRouter(SidebarContent)
+const mapStateToProps = function (state) {
+  return {
+    auth: state.auth
+  }
+}
+
+export default withRouter(connect(mapStateToProps, null)(SidebarContent));
