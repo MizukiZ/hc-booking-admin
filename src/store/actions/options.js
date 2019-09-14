@@ -1,8 +1,7 @@
 import {
   FETCH_OPTIONS_DATA
 } from "./actionTypes"
-import axios from "axios"
-
+import hcApi from "../../axiosConfig"
 
 const fetchOptionsData = data => {
   return {
@@ -12,14 +11,9 @@ const fetchOptionsData = data => {
 }
 
 export const fetchOptionsDataFromApi = () => {
-  // hc api url
-  const localhostApi = `http://localhost:3000/api/v1/options`
-  const productionApi = 'https://hc-booking-api.herokuapp.com/api/v1/options'
-
-  const hcApi = process.env.NODE_ENV === "development" ? localhostApi : productionApi
 
   return (dispatch) => {
-    axios.get(hcApi).then(response => {
+    hcApi.get('/api/v1/options').then(response => {
       dispatch(fetchOptionsData(response.data.data))
     })
       .catch(error => {

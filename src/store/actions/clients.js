@@ -1,8 +1,7 @@
 import {
   FETCH_CLIENTS_DATA
 } from "./actionTypes"
-import axios from "axios"
-
+import hcApi from "../../axiosConfig"
 
 const fetchClientsData = data => {
   return {
@@ -12,14 +11,9 @@ const fetchClientsData = data => {
 }
 
 export const fetchClientsDataFromApi = () => {
-  // hc api url
-  const localhostApi = `http://localhost:3000/api/v1/clients`
-  const productionApi = 'https://hc-booking-api.herokuapp.com/api/v1/clients'
-
-  const hcApi = process.env.NODE_ENV === "development" ? localhostApi : productionApi
 
   return (dispatch) => {
-    axios.get(hcApi).then(response => {
+    hcApi.get('/api/v1/clients').then(response => {
       dispatch(fetchClientsData(response.data.data))
     })
       .catch(error => {

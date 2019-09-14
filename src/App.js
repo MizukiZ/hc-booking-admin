@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import Sidebar from "react-sidebar";
 import SidebarContent from "./components/SidebarContent";
 import Header from "./components/Header";
-import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi, fetchOptionsDataFromApi } from './store/actions/index'
+import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi, fetchOptionsDataFromApi, getAdminProfileFetch } from './store/actions/index'
 import { Route } from "react-router-dom"
 
 import ScheduleContent from "./components/ScheduleContent"
 import ClientContent from "./components/ClientContent"
 import SettingContent from "./components/SettingContent"
+
+import { setTokenToRequestHeader } from './axiosConfig'
 
 const styles = {
   contentHeaderMenuLink: {
@@ -29,11 +31,24 @@ const styles = {
 class App extends Component {
 
   componentDidMount() {
-    this.props.fetchAppointments()
-    this.props.fetchSettings()
-    this.props.fetchClients()
-    this.props.fetchOptions()
+    this.props.getAdmin()
   }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.auth.currentUser !== this.props.auth.currentUser) {
+      setTokenToRequestHeader()
+      const isLoggedIn = this.props.auth.currentUser ? true : false
+      // listen the login logout changes
+      if (isLoggedIn) {
+        this.props.fetchAppointments()
+        this.props.fetchSettings()
+        this.props.fetchClients()
+        this.props.fetchOptions()
+      }
+    }
+  }
+
+
 
   render() {
     return (
@@ -78,7 +93,8 @@ const mapStateToProps = function (state) {
   return {
     appointments: state.appointments,
     settings: state.appointments,
-    clients: state.appointments
+    clients: state.appointments,
+    auth: state.auth
   }
 }
 
@@ -87,7 +103,8 @@ const mapDispatchToProps = dispatch => {
     fetchAppointments: () => dispatch(fetchAppointmentsDataFromApi()),
     fetchSettings: () => dispatch(fetchSettingsDataFromApi()),
     fetchClients: () => dispatch(fetchClientsDataFromApi()),
-    fetchOptions: () => dispatch(fetchOptionsDataFromApi())
+    fetchOptions: () => dispatch(fetchOptionsDataFromApi()),
+    getAdmin: () => dispatch(getAdminProfileFetch())
   }
 }
 
