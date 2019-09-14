@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import '../styles/lock.css'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -8,8 +8,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux';
-import { adminLoginFetch, adminLogout } from '../store/actions/index'
+import { adminLoginFetch, adminLogout, loginError } from '../store/actions/index'
 
 const styles = {
   root: {
@@ -30,24 +31,45 @@ const Header = props => {
     email: '',
     password: ''
   })
-  const [verified, setVerified] = useState(false)
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = React.useState(false);
 
-  function handleClickOpen() {
-    setModalOpen(true);
+  useEffect(() => {
+    if (!props.auth.currentUser) {
+      // logged out, close the logout modal
+      handleClose('logout')
+    } else {
+      // logged in. then close the login modal
+      handleClose('login')
+    }
+  }, [props.auth.currentUser])
+
+  function handleClickOpen(type) {
+    if (type === 'login') {
+      setModalOpen(true);
+    } else {
+      setLogoutModalOpen(true)
+    }
   }
 
-  function handleClose() {
+  function handleClose(type) {
+    // reset login error
+    props.loginErrorReset()
     // set form state empty 
     stateChange({
       email: '',
       password: ''
     })
-    setModalOpen(false);
+
+    if (type === 'login') {
+      setModalOpen(false);
+    } else {
+      setLogoutModalOpen(false)
+    }
   }
 
   function handleUnlock() {
-    console.log('unlock')
+    props.handleLogin(formState)
   }
 
   function handleLock() {
@@ -66,20 +88,25 @@ const Header = props => {
         onClick={() => {
           if (props.auth.currentUser) {
             // if logged in, then logout process
-            handleLock()
+            handleClickOpen('logout')
           } else {
             // not logged in yet, then login process
             // open form modal
-            handleClickOpen()
+            handleClickOpen('login')
           }
         }}
         className={`lock ${props.auth.currentUser ? 'unlocked' : ''}`
         }></Grid>
 
       {/* modal content */}
-      <Dialog open={modalOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog open={modalOpen} onClose={() => {
+        handleClose('login')
+      }} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Authentication</DialogTitle>
         <DialogContent>
+
+          <Typography color='error' align='center' variant='subtitle2' style={{ minHeight: 25, fontWeight: 'bold' }}>{props.auth.authError ? "Wrong Input" : ''}</Typography>
+
           <DialogContentText>
             Please Enter Your Email Address And Password To Unlock This Service.
           </DialogContentText>
@@ -115,16 +142,46 @@ const Header = props => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} >
+          <Button onClick={() => {
+            handleClose('login')
+          }} >
             Cancel
           </Button>
           <Button
             onClick={() => {
               // unlock process
-              props.handleLogin(formState)
+              handleUnlock()
             }}
             color="primary">
             Unlock
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+      {/* logout modal */}
+      <Dialog open={logoutModalOpen} onClose={() => {
+        handleClose('logout')
+      }} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Lock</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are You Sure You Want To Logout?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {
+            handleClose('logout')
+          }} >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              // logout process
+              handleLock()
+            }}
+            color="primary">
+            Ok
           </Button>
         </DialogActions>
       </Dialog>
@@ -145,6 +202,9 @@ const mapDispatchToProps = dispatch => {
     },
     handleLogout: () => {
       return dispatch(adminLogout())
+    },
+    loginErrorReset: () => {
+      return dispatch(loginError(false))
     }
   }
 }

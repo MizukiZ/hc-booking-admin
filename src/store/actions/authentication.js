@@ -1,6 +1,7 @@
 import {
   ADMIN_LOGIN,
-  ADMIN_LOGOUT
+  ADMIN_LOGOUT,
+  LOGIN_ERROR
 } from "./actionTypes"
 import hcApi from "../../axiosConfig"
 
@@ -8,6 +9,13 @@ const adminLogin = adminName => ({
   type: ADMIN_LOGIN,
   adminName: adminName
 })
+
+export const loginError = (result) => {
+  return {
+    type: LOGIN_ERROR,
+    result: result
+  }
+}
 
 export const adminLogout = () => {
   return { type: ADMIN_LOGOUT }
@@ -28,7 +36,7 @@ export const adminLoginFetch = payload => {
       dispatch(adminLogin(response.data.username))
     })
       .catch(error => {
-        console.log(error)
+        dispatch(loginError(true))
       })
   }
 }
