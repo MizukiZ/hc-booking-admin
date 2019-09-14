@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import Sidebar from "react-sidebar";
 import SidebarContent from "./components/SidebarContent";
 import Header from "./components/Header";
-import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi } from './store/actions/index'
-import { Route, withRouter } from "react-router-dom"
+import { fetchAppointmentsDataFromApi, fetchSettingsDataFromApi, fetchClientsDataFromApi, fetchOptionsDataFromApi } from './store/actions/index'
+import { Route } from "react-router-dom"
 
-// import SidebarContent from "./sidebar_content";
+import ScheduleContent from "./components/ScheduleContent"
+import ClientContent from "./components/ClientContent"
+import SettingContent from "./components/SettingContent"
 
 const styles = {
   contentHeaderMenuLink: {
@@ -30,6 +32,7 @@ class App extends Component {
     this.props.fetchAppointments()
     this.props.fetchSettings()
     this.props.fetchClients()
+    this.props.fetchOptions()
   }
 
   render() {
@@ -52,17 +55,17 @@ class App extends Component {
 
         {/* schedule page path */}
         <Route path='/' exact component={() => {
-          return <h1>Schedule content here</h1>
+          return <ScheduleContent />
         }} />
 
         {/* clients page path */}
         <Route path='/clients/' component={() => {
-          return <h1>clients content here</h1>
+          return <ClientContent />
         }} />
 
         {/* settings page path */}
         <Route path='/settings/' component={() => {
-          return <h1>settings content here</h1>
+          return <SettingContent />
         }} />
 
       </Sidebar>
@@ -83,7 +86,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchAppointments: () => dispatch(fetchAppointmentsDataFromApi()),
     fetchSettings: () => dispatch(fetchSettingsDataFromApi()),
-    fetchClients: () => dispatch(fetchClientsDataFromApi())
+    fetchClients: () => dispatch(fetchClientsDataFromApi()),
+    fetchOptions: () => dispatch(fetchOptionsDataFromApi())
   }
 }
 

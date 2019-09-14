@@ -6,11 +6,13 @@ import logger from "redux-logger"
 import appointmentReducer from './reducers/appointmentReducer'
 import settingReducer from './reducers/settingReducer'
 import clientReducer from './reducers/clientReducer'
+import optionReducer from './reducers/optionReducer'
 
 const rootReducer = combineReducers({
   appointments: appointmentReducer,
   settings: settingReducer,
-  clients: clientReducer
+  clients: clientReducer,
+  options: optionReducer
 })
 
 const configureStore = () => {
