@@ -1,7 +1,9 @@
 import {
   ADMIN_LOGIN,
   ADMIN_LOGOUT,
-  LOGIN_ERROR
+  LOGIN_ERROR,
+  ADMIN_REQUEST_POST,
+  ADMIN_REQUEST_RECEIVE
 } from "./actionTypes"
 import hcApi from "../../axiosConfig"
 
@@ -21,9 +23,21 @@ export const adminLogout = () => {
   return { type: ADMIN_LOGOUT }
 }
 
-export const adminLoginFetch = payload => {
+const requestPost = () => {
+  return {
+    type: ADMIN_REQUEST_POST
+  }
+}
 
+const requestReceive = () => {
+  return {
+    type: ADMIN_REQUEST_RECEIVE
+  }
+}
+
+export const adminLoginFetch = payload => {
   return (dispatch) => {
+    dispatch(requestPost())
     hcApi({
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -34,9 +48,11 @@ export const adminLoginFetch = payload => {
       // save the token in localStorage
       localStorage.setItem("token", response.data.token)
       dispatch(adminLogin(response.data.username))
+      dispatch(requestReceive())
     })
       .catch(error => {
         dispatch(loginError(true))
+        dispatch(requestReceive())
       })
   }
 }

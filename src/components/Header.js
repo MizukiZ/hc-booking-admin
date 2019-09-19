@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import '../styles/lock.css'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -11,6 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux';
 import { adminLoginFetch, adminLogout, loginError } from '../store/actions/index'
+import HashLoader from 'react-spinners/HashLoader';
 
 const styles = {
   root: {
@@ -33,6 +34,7 @@ const Header = props => {
   })
   const [modalOpen, setModalOpen] = React.useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     if (!props.auth.currentUser) {
@@ -45,14 +47,17 @@ const Header = props => {
   }, [props.auth.currentUser])
 
   function handleClickOpen(type) {
+
     if (type === 'login') {
-      setModalOpen(true);
+      setModalOpen(true)
     } else {
       setLogoutModalOpen(true)
     }
   }
 
   function handleClose(type) {
+    setLoading(false)
+
     // reset login error
     props.loginErrorReset()
     // set form state empty 
@@ -69,6 +74,7 @@ const Header = props => {
   }
 
   function handleUnlock() {
+    setLoading(true)
     props.handleLogin(formState)
   }
 
@@ -105,46 +111,62 @@ const Header = props => {
         <DialogTitle id="form-dialog-title">Authentication</DialogTitle>
         <DialogContent>
 
-          <Typography color='error' align='center' variant='subtitle2' style={{ minHeight: 25, fontWeight: 'bold' }}>{props.auth.authError ? "Wrong Input" : ''}</Typography>
-
-          <DialogContentText>
-            Please Enter Your Email Address And Password To Unlock This Service.
-          </DialogContentText>
-          <Grid container justify='center' >
-            <Grid item xs={10} style={{ marginTop: 10 }}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Email Address"
-                type="email"
-                value={formState.email}
-                fullWidth
-                onChange={(e) => {
-                  stateChange({ ...formState, email: e.target.value })
-                }}
-              />
+          {props.auth.isFetching ?
+            <Grid container justify="center">
+              <Grid item xs={5}>
+                <HashLoader
+                  loading={loading}
+                  color={"#03a9f4"}
+                />
+              </Grid>
             </Grid>
+            :
+            <Fragment>
+              <Typography color='error' align='center' variant='subtitle2' style={{ minHeight: 25, fontWeight: 'bold' }}>{props.auth.authError ? "Wrong Input" : ''}</Typography>
+              <DialogContentText align='center'>
+                {loading && !props.auth.authError ? 'Please wait...' : 'Please Enter Your Email Address And Password To Unlock This Service.'}
+              </DialogContentText>
+              <Grid container justify='center' >
+                <Grid item xs={10} style={{ marginTop: 10 }}>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Email Address"
+                    type="email"
+                    value={formState.email}
+                    fullWidth
+                    onChange={(e) => {
+                      stateChange({ ...formState, email: e.target.value })
+                    }}
+                  />
+                </Grid>
 
-            <Grid item xs={10} style={{ marginTop: 20, marginBottom: 20 }}>
-              <TextField
-                margin="dense"
-                id="password"
-                label="Password"
-                type="password"
-                value={formState.password}
-                fullWidth
-                onChange={(e) => {
-                  stateChange({ ...formState, password: e.target.value })
-                }}
-              />
-            </Grid>
-          </Grid>
+                <Grid item xs={10} style={{ marginTop: 20, marginBottom: 20 }}>
+                  <TextField
+                    margin="dense"
+                    id="password"
+                    label="Password"
+                    type="password"
+                    value={formState.password}
+                    fullWidth
+                    onChange={(e) => {
+                      stateChange({ ...formState, password: e.target.value })
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Fragment>
+          }
         </DialogContent>
+
         <DialogActions>
-          <Button onClick={() => {
-            handleClose('login')
-          }} >
+          <Button
+            onClick={() => {
+              handleClose('login')
+            }}
+            disabled={props.auth.isFetching}
+          >
             Cancel
           </Button>
           <Button
@@ -152,6 +174,7 @@ const Header = props => {
               // unlock process
               handleUnlock()
             }}
+            disabled={props.auth.isFetching}
             color="primary">
             Unlock
           </Button>
